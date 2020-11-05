@@ -1,0 +1,41 @@
+.head {
+    background-color: black;
+    color: white;
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-around; 
+    padding: 15px;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    border-bottom: 1px solid #18FFFF;
+}
+
+.userName {
+    width: 33%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.buttons {
+    width: 33%;
+    display: flex;
+    flex-direction: row;
+    align-items: right;
+    justify-content: right;
+    .btn {
+        margin: 0px 15px;
+        font-size: 1rem;
+    }
+}
+
+.button {
+    margin: 0px 15px;
+}
+
+.typography {
+    padding: 0px 15px;
+}

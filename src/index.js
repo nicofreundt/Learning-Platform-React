@@ -2,12 +2,28 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import Login from './components/login/Login';
+import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
 import * as serviceWorker from './serviceWorker';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 ReactDOM.render(
+  <div className="every">
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <Router>
+      <Switch>
+        <Route className="all" exact path="/login" component={Login}/>
+        <ProtectedRoute exact path="/" component={App}/>
+        <Route path="*" component={() => <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>404 NOT FOUND</div>}/>
+      </Switch>
+    </Router>
+  </React.StrictMode>
+  </div>
+  ,
   document.getElementById('root')
 );
 

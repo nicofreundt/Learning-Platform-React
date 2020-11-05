@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Header from './components/header/Header';
+import Menu from './components/menu/Menu';
+import { withRouter } from 'react-router-dom';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const theme = createMuiTheme({
+  palette: {
+      primary: {
+          main: '#18FFFF',
+          dark: '',
+      },
+      secondary: {
+          main: '#18FFFF',
+          dark: '',
+      },
+      type: 'dark'
+  }
+})
+
+
+class App extends Component {
+
+
+  
+  render() {
+    
+    return (
+      <div className="App">
+        <ThemeProvider theme={theme}>
+          <Header className="headsWillRoll" value={localStorage.getItem('user')}/>
+          <Menu className="menu"/>
+        </ThemeProvider>
+      
+      </div>
+    );
+  }
 }
 
-export default App;
+export default withRouter(App);

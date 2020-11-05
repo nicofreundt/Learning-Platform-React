@@ -1,0 +1,65 @@
+.parent {
+    padding: 0px 0px;
+    display: flex;
+    align-items: left;
+    overflow: hidden;
+}
+
+.task-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.child {
+    cursor: pointer;
+}
+
+.taskRow {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+  
+.taskRow > div {
+    margin: 0px 10px;
+}
+
+.taskParent {
+    margin-top: 25%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .taskCard {    
+        height: 80%;
+        width: 60%;
+        padding: 50px;
+        overflow: auto;
+    }
+}
+
+.parent > div {
+    margin-right: 25px;
+}
+
+.parent > div > .headLine {
+    width: 80vw;
+}
+
+.taskCard {
+    width: 40px;
+}
+
+.taskWrapper {
+    cursor: pointer;
+}
+
+.headLine {
+    text-align: left;
+    margin-left: 30px;
+}

@@ -1,0 +1,18 @@
+.taskCard {
+    background: #121212;
+    color: #FFF;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 15px 15px 15px 15px;
+    margin: 0px 0px 0px 0px;
+    min-width: 30em;
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    p, li, div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
