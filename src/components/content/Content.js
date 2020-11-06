@@ -78,27 +78,30 @@ class Content extends Component {
                                 {this.state.selected ? 
                                     <div>
                                         <TaskPage task={this.state.task} func={this.unselectTask}/>
-                                        {/* <TaskCard value={this.state.task}/>
-                                        <Button style={{marginTop: "25px"}} onClick={() => this.unselectTask()}>Zurück</Button> */}
                                     </div>
                                 :
-                                    <>{arr.map(task => 
+                                    <>{arr[0] ? 
+                                        <>{arr.map(task => 
                                     
-                                        <div key={task[0].ID}>
-                                        
-                                            {task[0].Level === level && task[0].Topic === this.props.topic ? 
-                                                null 
-                                                : 
-                                                <h1 className="headLine">{level = task[0].Level}</h1>
-                                            }
-
-                                            <div className="task-container">
-                                                <TaskRow func={this.selectedTask} topic={this.props.topic} tasks={task}/>
-                                            </div>
+                                            <div key={task[0].ID}>
                                             
-
-                                        </div>
-                                    )}</>
+                                                {task[0].Level === level && task[0].Topic === this.props.topic ? 
+                                                    null 
+                                                    : 
+                                                    <h1 className="headLine">{level = task[0].Level}</h1>
+                                                }
+    
+                                                <div className="task-container">
+                                                    <TaskRow func={this.selectedTask} topic={this.props.topic} tasks={task}/>
+                                                </div>
+                                                
+    
+                                            </div>
+                                        )}</>
+                                        : 
+                                        <div style={{display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", textAlign: "center"}}>COULD NOT LOAD ANY TASKS</div>
+                                    }</>
+                                    
                                 }
                                 
                                 
