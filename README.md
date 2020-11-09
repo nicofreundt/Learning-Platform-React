@@ -66,4 +66,58 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
 # Learning-Platform-React
+
+## Github-Repositorys
+
+* react: github.com/nicofreundt/lp1
+* express: github.com/nicofreundt/lp2
+
+## Notwendige Installationen
+
+* NodeJS
+* MySQL
+
+## Anleitung
+
+### MySQL Authentication Method muss der Option 'Use Legacy Authentication Method' entsprechen
+
+### Datenbank mit folgendem Skript initialisieren
+
+CREATE DATABASE Lernplattform;
+USE Lernplattform;
+CREATE TABLE users (
+	user_id int NOT NULL AUTO_INCREMENT,
+	username varchar(16) NOT NULL,
+	email varchar(255) NOT NULL,
+	password varchar(255) NOT NULL,
+	create_time timestamp NOT NULL CURRENT_TIMESTAMP,
+	PRIMARY KEY (user_id)
+);
+CREATE TABLE tasks (
+	task_id int NOT NULL AUTO_INCREMENT,
+	Thema varchar(45) NOT NULL,
+	Level varchar(45) NOT NULL,
+	Text text NOT NULL,
+	Titel varchar(45) NOT NULL,
+	PRIMARY KEY (task_id)
+);
+CREATE TABLE status (
+	taskID int NOT NULL,
+	userID int NOT NULL,
+	status tinyint(1),
+	PRIMARY KEY (taskID, userID), 
+	FOREIGN KEY (taskID) REFERENCES tasks (task_id),
+	FOREIGN KEY (userID) REFERENCES users (user_id),
+)
+
+### Repositorys von Github klonen
+'git clone' für beide Repositories ausführen
+### Node Modules installieren
+'npm install' in den Root-Ordnern der Repositories ausführen
+### MySQL Login-Daten
+In den Dateien tasks.js und users.js im Ordner Routes vom Backend müssen am Anfang der Datei die Zugangsdaten für MySQL angegeben werden
+
+
+
