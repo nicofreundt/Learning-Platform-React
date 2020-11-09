@@ -79,7 +79,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 * NodeJS
 * MySQL
 
-## Anleitung
+## Installations-Anleitung
 
 ### MySQL Authentication Method muss der Option 'Use Legacy Authentication Method' entsprechen
 
@@ -92,7 +92,7 @@ CREATE TABLE users (
 	username varchar(16) NOT NULL,
 	email varchar(255) NOT NULL,
 	password varchar(255) NOT NULL,
-	create_time timestamp NOT NULL CURRENT_TIMESTAMP,
+	create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (user_id)
 );
 CREATE TABLE tasks (
@@ -119,5 +119,9 @@ CREATE TABLE status (
 ### MySQL Login-Daten
 In den Dateien tasks.js und users.js im Ordner Routes vom Backend müssen am Anfang der Datei die Zugangsdaten für MySQL angegeben werden
 
+## Start-Anleitung
 
+### 'npm start'
+Diesen Befehl in beiden Repositories ausführen, um Frontend und Backend zu starten.
+Die Applikation wird sich daraufhin direkt im Browser öffnen.
 
