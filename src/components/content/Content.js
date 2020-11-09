@@ -83,7 +83,7 @@ class Content extends Component {
                                         <TaskPage task={this.state.task} func={this.unselectTask}/>
                                     </div>
                                 :
-                                    <>{arr[0].length !== 0 ? 
+                                    <>{arr[0] ? 
                                         <>{arr.map(task => 
                                     
                                             <div key={task[0].ID}>
