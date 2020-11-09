@@ -16,7 +16,7 @@ class Auth {
             body: JSON.stringify({ username, password })
         }
 
-        const res = fetch('/tasks', requestOptions).then(res => res.json())
+        const res = fetch('/users', requestOptions).then(res => res.json())
 
         res.then((result) => {
             if(result.status) {
@@ -37,7 +37,7 @@ class Auth {
             body: JSON.stringify({ username, password, mail })
         }
 
-        const res = fetch('/tasks/new', requestOptions).then(res => res.json())
+        const res = fetch('/users/new', requestOptions).then(res => res.json())
 
         res.then((result) => {
             if(result.status === 200) {

@@ -21,16 +21,16 @@ class Content extends Component {
 
     componentDidMount() {
         this.setState({tasks: []})
-        fetch(`/users/${this.props.topic}`)
+        fetch(`/tasks/${this.props.topic}`)
             .then(res => res.json())    
             .then(aufgaben => this.setState({ tasks: aufgaben, isLoading: false }));
     }
 
     handleNav = (direction) => {
         if (direction === 'left') {
-            this.navRef ? (this.navRef.current.scrollLeft -= 200) : console.log('Was soll das');
+            this.navRef ? (this.navRef.current.scrollLeft -= 200) : console.log('');
         } else {
-            this.navRef ? (this.navRef.current.scrollLeft += 200) : console.log('Was soll das');
+            this.navRef ? (this.navRef.current.scrollLeft += 200) : console.log('');
         }
     }
 
@@ -49,12 +49,15 @@ class Content extends Component {
         const isLoading = this.state.isLoading;
         var level = '';
 
-        var arr = [[], []];
-        var levelNames = ['Anfänger', 'Fortgeschritten'];
+        var arr = [];
+        var levelNames = ['Anfänger', 'Fortgeschritten', 'Profi'];
 
         for (let i of tasks) {
             for(let j = 0; j < levelNames.length; j++) {
                 if(i.Level === levelNames[j]) {
+                    if(!arr[j]) {
+                        arr[j] = [];
+                    }
                     arr[j].push(i);
                 }
             }
@@ -80,7 +83,7 @@ class Content extends Component {
                                         <TaskPage task={this.state.task} func={this.unselectTask}/>
                                     </div>
                                 :
-                                    <>{arr[0] ? 
+                                    <>{arr[0].length !== 0 ? 
                                         <>{arr.map(task => 
                                     
                                             <div key={task[0].ID}>

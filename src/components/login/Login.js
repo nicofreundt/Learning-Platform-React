@@ -1,25 +1,10 @@
 import React, { useState } from 'react';
 import './Login.scss';
 import { TextField, Typography, Button, Switch } from '@material-ui/core';
-import { AccountCircle, Lock, Mail } from '@material-ui/icons/';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { AccountCircle, Lock, Mail } from '@material-ui/icons/';
 import auth from '../../auth';
-
-
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#18FFFF',
-            dark: '',
-        },
-        secondary: {
-            main: '#18FFFF',
-            dark: '',
-        },
-        type: 'dark'
-    }
-})
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 
@@ -60,39 +45,67 @@ const Login = (props) => {
         setSwitchStatus(false);
     }
 
-    return (
-        <div className="logPage">
-            <ThemeProvider theme={theme}>
-                <Typography variant="h1">Login Page</Typography>
-                <div className="form">
-                    <div className="lsSwitch">
-                        <Typography>Login</Typography>
-                        <Switch
-                            checked={switchStatus}
-                            onChange={handleChangeSwitch}
-                        />
-                        <Typography>Sign Up</Typography>
-                    </div>
-                    <div>
-                        <AccountCircle/>
-                        <TextField label="Username" value={username} onChange={handleChangeUser}/>
-                    </div>
-                    <div>
-                        <Lock/>
-                        <TextField type="password" label="Password" value={password} onChange={handleChangePW}/>
-                    </div>
-                    {switchStatus &&
-                        <div>
-                            <Mail/>
-                            <TextField label="E-Mail" value={mail} onChange={handleChangeMail}/>
+    const theme = createMuiTheme({
+        palette: {
+            primary: {
+                main: '#18FFFF',
+                dark: '',
+            },
+            secondary: {
+                main: '#18FFFF',
+                dark: '',
+            },
+            type: 'dark'
+        }
+    })
+
+    if (localStorage.getItem('user')) {
+        return <Redirect to={
+            {
+                pathname: "/",
+                state: {
+                    from: props.location
+                }
+            }
+        }/>
+    } else {
+        return (
+            <div className="logPage">
+                <ThemeProvider theme={theme}>
+                    <Typography variant="h1">Login Page</Typography>
+                    <div className="form">
+                        <div className="lsSwitch">
+                            <Typography>Login</Typography>
+                            <Switch
+                                checked={switchStatus}
+                                onChange={handleChangeSwitch}
+                            />
+                            <Typography>Sign Up</Typography>
                         </div>
-                    }
-                    <Button onClick={switchStatus ? signup : login} variant="outlined" color="primary">Submit</Button>
-                </div>
-            </ThemeProvider>
-            
-        </div>
+                        <div>
+                            <AccountCircle/>
+                            <TextField label="Username" value={username} onChange={handleChangeUser}/>
+                        </div>
+                        <div>
+                            <Lock/>
+                            <TextField type="password" label="Password" value={password} onChange={handleChangePW}/>
+                        </div>
+                        {switchStatus &&
+                            <div>
+                                <Mail/>
+                                <TextField label="E-Mail" value={mail} onChange={handleChangeMail}/>
+                            </div>
+                        }
+                        <Button onClick={switchStatus ? signup : login} variant="outlined" color="primary">Submit</Button>
+                    </div>
+                </ThemeProvider>
+                
+                
+            </div>
         )
+    }
+
+    
 }
 
 export default Login;

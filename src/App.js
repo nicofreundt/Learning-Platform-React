@@ -5,7 +5,10 @@ import Menu from './components/menu/Menu';
 import { withRouter } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({
+
+var themeOption = 'dark';
+
+var theme = createMuiTheme({
   palette: {
       primary: {
           main: '#18FFFF',
@@ -15,21 +18,22 @@ const theme = createMuiTheme({
           main: '#18FFFF',
           dark: '',
       },
-      type: 'dark'
+      type: themeOption
   }
 })
 
+var themeChange = () => {
+  theme.palette.type === 'dark' ? theme.palette.type = 'light' : theme.palette.type = 'dark';
+  console.log(theme.palette.type)
+}
 
 class App extends Component {
-
-
-  
   render() {
     
     return (
       <div className="App">
         <ThemeProvider theme={theme}>
-          <Header className="headsWillRoll" value={localStorage.getItem('user')}/>
+          <Header func={themeChange} className="head" value={localStorage.getItem('user')}/>
           <Menu className="menu"/>
         </ThemeProvider>
       

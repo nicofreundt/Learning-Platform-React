@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Content from '../content/Content';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 function a11yProps(index) {
     return {
@@ -15,7 +14,6 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      backgroundColor: '#000000',
       color: '#FFFFFF',
       paddingTop: "80px",
     },
@@ -23,20 +21,6 @@ const useStyles = makeStyles((theme) => ({
       borderRight: `1px solid ${theme.palette.divider}`,
     },
 }));
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#18FFFF',
-            dark: '',
-        },
-        secondary: {
-            main: '#18FFFF',
-            dark: '',
-        },
-        type: 'dark'
-    }
-})
 
 const Menu = () => {
     const classes = useStyles();
@@ -48,21 +32,19 @@ const Menu = () => {
 
     return (
         <div className={classes.root}>
-            <ThemeProvider theme={theme}>
-                <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                value={value}
-                onChange={handleChange}
-                aria-label="Vertical tabs example"
-                className={classes.tabs + ' menu'}>
-                    <Tab className="firstOne" label="Python" {...a11yProps(0)}></Tab> 
-                    <Tab label="Java" {...a11yProps(1)}></Tab>
-                    <Tab label="DB" {...a11yProps(2)}></Tab>
-                    <Tab label="Menüpunkt" {...a11yProps(3)}></Tab>
-                    <Tab label="Menüpunkt" {...a11yProps(4)}></Tab>
-                </Tabs>
-            </ThemeProvider>
+            <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            className={classes.tabs + ' menu'}>
+                <Tab className="firstOne" label="Python" {...a11yProps(0)}></Tab> 
+                <Tab label="Java" {...a11yProps(1)}></Tab>
+                <Tab label="DB" {...a11yProps(2)}></Tab>
+                <Tab label="Menüpunkt" {...a11yProps(3)}></Tab>
+                <Tab label="Menüpunkt" {...a11yProps(4)}></Tab>
+            </Tabs>
             
             <Content key={Math.random() % 2} topic="Python" value={value} index={0}></Content>
             <Content key={Math.random() + 3} topic="Java" value={value} index={1}></Content>
