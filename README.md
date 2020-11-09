@@ -84,7 +84,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 ### MySQL Authentication Method muss der Option 'Use Legacy Authentication Method' entsprechen
 
 ### Datenbank mit folgendem Skript initialisieren
-
+```
 CREATE DATABASE Lernplattform;
 USE Lernplattform;
 CREATE TABLE users (
@@ -111,7 +111,7 @@ CREATE TABLE status (
 	FOREIGN KEY (taskID) REFERENCES tasks (task_id),
 	FOREIGN KEY (userID) REFERENCES users (user_id),
 )
-
+```
 ### Repositorys von Github klonen
 'git clone' für beide Repositories ausführen
 ### Node Modules installieren
