@@ -3,6 +3,46 @@
   height: 100%;
 }
 
+.dark {
+  background: black;
+  color: white;
+  .activeTheme {
+    color: #18FFFF;
+  }
+  .inactiveTheme {
+    color: rgba(255, 255, 255, 0.5)
+  }
+}
+
+.light {
+  background: #fafafa;
+  color: rgba(0, 0, 0, 87);
+  .menu {
+    background: white;
+  }
+  .taskCard {
+    background: white;
+    color: black;
+  }
+  .activeTheme {
+    color: rgb(255, 83, 172);
+  }
+  .inactiveTheme {
+    color: rgba(255, 255, 255, 0.5)
+  }
+  .head {
+    border-bottom: 5px solid #E20074;
+    background: #181818;
+    color: white;
+  }
+  .imageTitle {
+    border-bottom: 1px solid #E20074;
+  }
+  .taskCard {
+    border-top: 5px solid #E20074;
+  }
+}
+
 .menu {
   width: 225px;
   height: 100%;

@@ -1,42 +1,68 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.scss';
 import Header from './components/header/Header';
 import Menu from './components/menu/Menu';
 import { withRouter } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-
-var themeOption = 'dark';
-
-var theme = createMuiTheme({
-  palette: {
-      primary: {
-          main: '#18FFFF',
-          dark: '',
-      },
-      secondary: {
-          main: '#18FFFF',
-          dark: '',
-      },
-      type: themeOption
-  }
-})
-
-var themeChange = () => {
-  theme.palette.type === 'dark' ? theme.palette.type = 'light' : theme.palette.type = 'dark';
-  console.log(theme.palette.type)
-}
-
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      themeVariable: 'dark'
+    }
+  }
+
   render() {
+    var darkTheme = createMuiTheme({
+      palette: {
+          primary: {
+              main: '#18FFFF',
+              dark: '',
+          },
+          secondary: {
+              main: '#18FFFF',
+              dark: '',
+          },
+          type: 'dark'
+      }
+    })
+
+    var lightTheme = createMuiTheme({
+      palette: {
+          primary: {
+              main: '#E20074',
+              dark: '',
+          },
+          secondary: {
+              main: '#E20074',
+              dark: '',
+          },
+          type: 'light'
+      }
+    })
+
+    document.body.classList.add(this.state.themeVariable);
+
+    var themeChange = () => {
+      document.body.classList.remove(this.state.themeVariable);
+      this.state.themeVariable === 'dark' ? this.setState({themeVariable: 'light'}) : this.setState({themeVariable: 'dark'});
+    }
     
     return (
       <div className="App">
-        <ThemeProvider theme={theme}>
-          <Header func={themeChange} className="head" value={localStorage.getItem('user')}/>
-          <Menu className="menu"/>
+        <ThemeProvider theme={darkTheme}>
+          <Header variable={this.state.themeVariable} theme={darkTheme} func={themeChange} className="head" value={localStorage.getItem('user')}/>
         </ThemeProvider>
-      
+        {this.state.themeVariable === 'dark' ?
+          <ThemeProvider theme={darkTheme}>
+            <Menu className="menu"/>
+          </ThemeProvider>
+        :
+          <ThemeProvider theme={lightTheme}>
+            <Menu className="menu"/>
+          </ThemeProvider>
+        }
       </div>
     );
   }

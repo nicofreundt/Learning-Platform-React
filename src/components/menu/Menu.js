@@ -14,7 +14,6 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      color: '#FFFFFF',
       paddingTop: "80px",
     },
     tabs: {

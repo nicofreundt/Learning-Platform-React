@@ -19,7 +19,7 @@ class TaskPage extends Component {
         return (
             <div className="taskPage" style={{display: "flex", flexDirection: "column"}}>
                 <p className="textWrapper" dangerouslySetInnerHTML={{__html: task.Text}}></p>
-                <h3 style={{textAlign: "left", borderBottom: "1px solid #18FFFF"}}>Bilder und Grafiken</h3>
+                <h3 className="imageTitle">Bilder und Grafiken</h3>
                 <div style={{display: "flex", justifyContent: "center"}}>
                     <Slider previousButton={<ArrowBackIosOutlined fontSize="large"/>} nextButton={<ArrowForwardIosOutlined fontSize="large"/>}>
                         {this.images.map((image, index) => 
