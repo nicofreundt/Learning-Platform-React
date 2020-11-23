@@ -11,10 +11,13 @@
     flex-direction: column;
     justify-content: space-evenly;
     border: 1px solid rgba(128, 128, 128, 0.3);
-    border-top: 3px solid #18FFFF;
     p, li, div {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+}
+
+.finished {
+    opacity: 0.5;
 }
 

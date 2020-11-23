@@ -52,7 +52,7 @@ class TaskRow extends Component {
                 <div className="parent" ref={this.navRef}>
                     {this.props.tasks.filter(task => task.Topic === this.props.topic).map(a =>
                         <div className="taskWrapper" onClick={() => this.props.func(a)} id={a.ID} key={a.ID}>
-                            <TaskCard className="child" value={a}/>
+                            <TaskCard active={typeof this.props.statusArr !== 'undefined' ? !this.props.statusArr.get(a.ID) : true} className="child" value={a}/>
                         </div>
                     )}
                 </div>

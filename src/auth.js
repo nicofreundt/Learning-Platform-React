@@ -22,6 +22,7 @@ class Auth {
             if(result.status) {
                 authenticated = result.status;
                 localStorage.setItem('user', result.username);
+                localStorage.setItem('userID', result.userID);
             } else {
                 authenticated = false;
                 alert("Falsche Eingabe!")

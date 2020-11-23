@@ -38,18 +38,18 @@ const Menu = () => {
             onChange={handleChange}
             aria-label="Vertical tabs example"
             className={classes.tabs + ' menu'}>
-                <Tab className="firstOne" label="Python" {...a11yProps(0)}></Tab> 
-                <Tab label="Java" {...a11yProps(1)}></Tab>
-                <Tab label="DB" {...a11yProps(2)}></Tab>
-                <Tab label="Menüpunkt" {...a11yProps(3)}></Tab>
-                <Tab label="Menüpunkt" {...a11yProps(4)}></Tab>
+                <Tab className="firstOne" label={<b>Python</b>} {...a11yProps(0)}></Tab> 
+                <Tab label={<b>Java</b>} {...a11yProps(1)}></Tab>
+                <Tab label={<b>DB</b>} {...a11yProps(2)}></Tab>
+                <Tab label={<b>Something</b>} {...a11yProps(3)}></Tab>
+                <Tab label={<b>Something else</b>} {...a11yProps(4)}></Tab>
             </Tabs>
             
-            <Content key={Math.random() % 2} topic="Python" value={value} index={0}></Content>
-            <Content key={Math.random() + 3} topic="Java" value={value} index={1}></Content>
-{/*             <Content tasks={props.tasks} value={value} index={2}>DB</Content>
-            <Content tasks={props.tasks} value={value} index={3}>Menüpunkt 1</Content>
-            <Content tasks={props.tasks} value={value} index={4}>Menüpunkt 2</Content> */}
+            <Content key={1} topic="Python" value={value} index={0}></Content>
+            <Content key={2} topic="Java" value={value} index={1}></Content>
+            <Content topic="DB" value={value} index={2}></Content>
+            <Content topic="Something" value={value} index={3}></Content>
+            <Content topic="SomethingElse" value={value} index={4}></Content>
         </div>
     );
 }

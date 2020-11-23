@@ -45,6 +45,12 @@ const Login = (props) => {
         setSwitchStatus(false);
     }
 
+    const handleKeyUp = (event) => {
+        if(event.key === "Enter") {
+            login();
+        }
+    }
+
     const theme = createMuiTheme({
         palette: {
             primary: {
@@ -88,7 +94,7 @@ const Login = (props) => {
                         </div>
                         <div>
                             <Lock/>
-                            <TextField type="password" label="Password" value={password} onChange={handleChangePW}/>
+                            <TextField onKeyUp={handleKeyUp} type="password" label="Password" value={password} onChange={handleChangePW}/>
                         </div>
                         {switchStatus &&
                             <div>

@@ -12,7 +12,9 @@ class Content extends Component {
             tasks: [],
             isLoading: true,
             task: null,
-            selected: false
+            selected: false,
+            status: [],
+            updated: false
         };
 
 
@@ -20,10 +22,23 @@ class Content extends Component {
     }
 
     componentDidMount() {
-        this.setState({tasks: []})
         fetch(`/tasks/${this.props.topic}`)
             .then(res => res.json())    
-            .then(aufgaben => this.setState({ tasks: aufgaben, isLoading: false }));
+            .then(aufgaben => this.setState({ tasks: aufgaben }));
+        fetch(`/status/get/${localStorage.getItem('userID')}`)
+            .then(res => res.json())
+            .then(status => this.setState({ status: status, isLoading: false }));
+    }
+
+    componentDidUpdate() {
+        if(this.state.isLoading) {
+            fetch(`/tasks/${this.props.topic}`)
+                .then(res => res.json())    
+                .then(aufgaben => this.setState({ tasks: aufgaben }));
+            fetch(`/status/get/${localStorage.getItem('userID')}`)
+                .then(res => res.json())
+                .then(status => this.setState({ status: status, isLoading: false }));
+        }
     }
 
     handleNav = (direction) => {
@@ -38,29 +53,43 @@ class Content extends Component {
         this.setState({task: t, selected: true});
     }
 
-    unselectTask = () => {
+    unselectTask = (x) => {
+        if(x) {
+            this.setState({isLoading: true});
+        };
         this.setState({task: null, selected: false});
     }
 
-
-
     render() {
         const tasks = this.state.tasks;
+        const status = this.state.status;
         const isLoading = this.state.isLoading;
         var level = '';
 
         var arr = [];
+        var arrS = [];
+        var arrM = [];
         var levelNames = ['Anfänger', 'Fortgeschritten', 'Profi'];
 
-        for (let i of tasks) {
-            for(let j = 0; j < levelNames.length; j++) {
-                if(i.Level === levelNames[j]) {
-                    if(!arr[j]) {
-                        arr[j] = [];
+        for (let i in levelNames) {
+            var helpArray = tasks.filter(task => task.Topic === this.props.topic).filter(task => task.Level === levelNames[i]);
+            var helpArrayS;
+            if(status.length !== 0) {
+                helpArrayS = status.filter(st => st.topic === this.props.topic).filter(s => s.level === levelNames[i]);
+                var numPos = 0;
+                var myMap = new Map();
+                if(helpArrayS.length !== 0) {
+                    for(let i of helpArrayS) {
+                        if(i.status !== 0) {
+                            numPos = numPos + 1;
+                        }
+                        myMap.set(i.id, i.status); 
                     }
-                    arr[j].push(i);
-                }
+                    arrM[i] = myMap;
+                    arrS[i] = Math.round((numPos / helpArray.length) * 100);
+                };
             }
+            if(helpArray.length !== 0) arr[i] = helpArray;
         }
 
         return (
@@ -83,26 +112,26 @@ class Content extends Component {
                                         <TaskPage task={this.state.task} func={this.unselectTask}/>
                                     </div>
                                 :
-                                    <>{arr[0] ? 
-                                        <>{arr.map(task => 
+                                    <>{arr.length !== 0 ? 
+                                        <>{arr.map((task, index) => 
                                     
                                             <div key={task[0].ID}>
                                             
-                                                {task[0].Level === level && task[0].Topic === this.props.topic ? 
-                                                    null 
-                                                    : 
-                                                    <h1 className="headLine">{level = task[0].Level}</h1>
+                                                {task[0].Level !== level ?
+                                                    <h1 className="headLine">{level = task[0].Level} - {typeof arrS[index] !== 'undefined' ? arrS[index] : 0}%</h1>
+                                                    :
+                                                    null
                                                 }
     
                                                 <div className="task-container">
-                                                    <TaskRow func={this.selectedTask} topic={this.props.topic} tasks={task}/>
+                                                    <TaskRow statusArr={arrM[index]} func={this.selectedTask} topic={this.props.topic} tasks={task}/>
                                                 </div>
                                                 
     
                                             </div>
                                         )}</>
                                         : 
-                                        <div style={{display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", textAlign: "center"}}>COULD NOT LOAD ANY TASKS</div>
+                                        <div style={{display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", textAlign: "center", marginTop: "25%"}}>COULD NOT LOAD ANY TASKS</div>
                                     }</>
                                     
                                 }
