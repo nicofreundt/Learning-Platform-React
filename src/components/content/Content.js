@@ -1,8 +1,30 @@
 import React, { Component } from 'react';
 import './Content.scss';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Box, Typography } from '@material-ui/core';
 import TaskRow from '../taskRow/TaskRow';
 import TaskPage from '../taskPage/TaskPage';
+
+function CircularProgressWithLabel(props) {
+    return (
+      <Box position="relative" display="inline-flex" style={{marginLeft: "25px"}}>
+        <CircularProgress variant="static" {...props} />
+        <Box
+          top={0}
+          left={0}
+          bottom={0}
+          right={0}
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+            props.value,
+          )}%`}</Typography>
+        </Box>
+      </Box>
+    );
+  }
 
 class Content extends Component {
     constructor(props) {
@@ -58,6 +80,7 @@ class Content extends Component {
             this.setState({isLoading: true});
         };
         this.setState({task: null, selected: false});
+        this.forceUpdate();
     }
 
     render() {
@@ -118,7 +141,7 @@ class Content extends Component {
                                             <div key={task[0].ID}>
                                             
                                                 {task[0].Level !== level ?
-                                                    <h1 className="headLine">{level = task[0].Level} - {typeof arrS[index] !== 'undefined' ? arrS[index] : 0}%</h1>
+                                                    <h1 className="headLine">{level = task[0].Level}<CircularProgressWithLabel value={typeof arrS[index] !== 'undefined' ? arrS[index] : 0}/></h1>
                                                     :
                                                     null
                                                 }

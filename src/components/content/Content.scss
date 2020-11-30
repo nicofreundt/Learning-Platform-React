@@ -59,6 +59,10 @@
 }
 
 .headLine {
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: flex-end;
     text-align: left;
     margin-left: 30px;
 }
