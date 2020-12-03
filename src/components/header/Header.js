@@ -22,7 +22,7 @@ const Header = (props) => {
                         <Switch className="btn" color="default" onChange={() => props.func()}/>
                         <p className={props.variable === "light" ? "activeTheme" : "inactiveTheme"}>Light</p>
                     </div>
-                    <Button className="btn">Button 2</Button>
+                    <Button className="btn" onClick={() => {props.newTask()}}>Add Task</Button>
                     <Button className="btn" onClick={
                         () => {
                             auth.logout(() => {props.history.push("/login")})

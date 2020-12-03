@@ -60,25 +60,6 @@ function TaskPage(props) {
         },
       }));
 
-    const getStatus = (taskID, userID) => {
-        //fetch status from backend
-
-        const status = checkedState;
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ taskID, userID, status })
-        }
-
-        const res = fetch('/status/get', requestOptions).then(res => res.json());
-
-        res.then((result) => {
-            setCheckedState(result.status);
-            setLoading(false);
-        });
-    }
-
     const setStatus = (taskID, userID) => {
         const status = checkedState ? 0 : 1;
 
@@ -99,12 +80,28 @@ function TaskPage(props) {
             }
         })   
     }
-
-    var count = 0;
     
     useEffect(() => {
+        const getStatus = (taskID, userID) => {
+            //fetch status from backend
+    
+            const status = checkedState;
+    
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ taskID, userID, status })
+            }
+    
+            const res = fetch('/status/get', requestOptions).then(res => res.json());
+    
+            res.then((result) => {
+                setCheckedState(result.status);
+                setLoading(false);
+            });
+        }
         getStatus(props.task.ID, localStorage.getItem('userID'));
-    }, [count]);
+    }, [props.task.ID, checkedState]);
 
     var task = props.task;
 
@@ -113,7 +110,6 @@ function TaskPage(props) {
     const buttonClassname = clsx({
         [classes.buttonSuccess]: checkedState,
         });
-    //getStatus();
 
     return (
         <div className="taskPage" style={{display: "flex", flexDirection: "column"}}>

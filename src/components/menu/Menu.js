@@ -18,10 +18,11 @@ const useStyles = makeStyles((theme) => ({
     },
     tabs: {
       borderRight: `1px solid ${theme.palette.divider}`,
+      zIndex: 2
     },
 }));
 
-const Menu = () => {
+const Menu = (props) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -45,11 +46,11 @@ const Menu = () => {
                 <Tab label={<b>Something else</b>} {...a11yProps(4)}></Tab>
             </Tabs>
             
-            <Content key={1} topic="Python" value={value} index={0}></Content>
-            <Content key={2} topic="Java" value={value} index={1}></Content>
-            <Content topic="DB" value={value} index={2}></Content>
-            <Content topic="Something" value={value} index={3}></Content>
-            <Content topic="SomethingElse" value={value} index={4}></Content>
+            <Content newTask={props.newTask} key={props.newTask + 1} topic="Python" value={value} index={0}></Content>
+            <Content newTask={props.newTask} key={props.newTask + 3} topic="Java" value={value} index={1}></Content>
+            <Content newTask={props.newTask} key={props.newTask + 5} topic="DB" value={value} index={2}></Content>
+            <Content newTask={props.newTask} key={props.newTask + 7} topic="Something" value={value} index={3}></Content>
+            <Content newTask={props.newTask} key={props.newTask + 9} topic="SomethingElse" value={value} index={4}></Content>
         </div>
     );
 }

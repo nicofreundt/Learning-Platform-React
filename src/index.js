@@ -13,7 +13,6 @@ import {
 
 ReactDOM.render(
   <div className="every">
-  <React.StrictMode>
     <Router>
       <Switch>
         <Route className="all" exact path="/login" component={Login}/>
@@ -21,7 +20,6 @@ ReactDOM.render(
         <Route path="*" component={() => <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>404 NOT FOUND</div>}/>
       </Switch>
     </Router>
-  </React.StrictMode>
   </div>
   ,
   document.getElementById('root')

@@ -9,7 +9,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      themeVariable: 'dark'
+      themeVariable: 'dark',
+      newTask: false
     }
   }
 
@@ -48,19 +49,23 @@ class App extends Component {
       document.body.classList.remove(this.state.themeVariable);
       this.state.themeVariable === 'dark' ? this.setState({themeVariable: 'light'}) : this.setState({themeVariable: 'dark'});
     }
+
+    var setNewTask = () => {
+      this.setState({newTask: !this.state.newTask});
+    }
     
     return (
       <div className="App">
         <ThemeProvider theme={darkTheme}>
-          <Header variable={this.state.themeVariable} theme={darkTheme} func={themeChange} className="head" value={localStorage.getItem('user')}/>
+          <Header variable={this.state.themeVariable} theme={darkTheme} func={themeChange} newTask={setNewTask} className="head" value={localStorage.getItem('user')}/>
         </ThemeProvider>
         {this.state.themeVariable === 'dark' ?
           <ThemeProvider theme={darkTheme}>
-            <Menu className="menu"/>
+            <Menu newTask={this.state.newTask} className="menu"/>
           </ThemeProvider>
         :
           <ThemeProvider theme={lightTheme}>
-            <Menu className="menu"/>
+            <Menu newTask={this.state.newTask} className="menu"/>
           </ThemeProvider>
         }
       </div>

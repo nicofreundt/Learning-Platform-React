@@ -3,6 +3,7 @@ import './Content.scss';
 import { CircularProgress, Box, Typography } from '@material-ui/core';
 import TaskRow from '../taskRow/TaskRow';
 import TaskPage from '../taskPage/TaskPage';
+import NewTask from '../newTask/newTask';
 
 function CircularProgressWithLabel(props) {
     return (
@@ -36,11 +37,16 @@ class Content extends Component {
             task: null,
             selected: false,
             status: [],
-            updated: false
+            updated: false,
+            newTask: props.newTask
         };
 
-
         this.navRef = React.createRef();
+    }
+
+    setNewTask() {
+        this.setState({newTask: true});
+        console.log("Hallo")
     }
 
     componentDidMount() {
@@ -80,7 +86,6 @@ class Content extends Component {
             this.setState({isLoading: true});
         };
         this.setState({task: null, selected: false});
-        this.forceUpdate();
     }
 
     render() {
@@ -130,39 +135,31 @@ class Content extends Component {
                             <CircularProgress style={{marginTop: '25%'}}/>
                             :
                             <div>
-                                {this.state.selected ? 
+                                {this.state.newTask ? <NewTask/> : 
+                                <>{this.state.selected ? 
                                     <div>
                                         <TaskPage task={this.state.task} func={this.unselectTask}/>
                                     </div>
                                 :
                                     <>{arr.length !== 0 ? 
                                         <>{arr.map((task, index) => 
-                                    
                                             <div key={task[0].ID}>
-                                            
                                                 {task[0].Level !== level ?
                                                     <h1 className="headLine">{level = task[0].Level}<CircularProgressWithLabel value={typeof arrS[index] !== 'undefined' ? arrS[index] : 0}/></h1>
                                                     :
                                                     null
                                                 }
-    
                                                 <div className="task-container">
                                                     <TaskRow statusArr={arrM[index]} func={this.selectedTask} topic={this.props.topic} tasks={task}/>
                                                 </div>
-                                                
-    
                                             </div>
                                         )}</>
                                         : 
                                         <div style={{display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", textAlign: "center", marginTop: "25%"}}>COULD NOT LOAD ANY TASKS</div>
                                     }</>
-                                    
-                                }
-                                
-                                
+                                }</>}
                             </div>
                         }
-                        
                     </div>
                 )}
             </div>
