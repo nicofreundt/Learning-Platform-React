@@ -1,0 +1,72 @@
+.root {
+    transform: translateY(-50%); 
+    margin-top: 25%; 
+    display: flex; 
+    justify-content: center; 
+    flex-direction: column; 
+    align-items: center;
+    .exitButton {
+        align-self: flex-start;
+        margin-left: 50px;
+        margin-top: 0px;
+        position: relative;
+    }
+}
+
+.taskDisplay {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column; 
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    width: 30vw;
+    border-bottom: 1px solid #18FFFF;
+}
+
+.inputSelectorBox {
+    width: 30vw; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-direction: row;
+    margin-bottom: 25px;
+    .inputSelector {
+        width: 40%;
+    }
+}
+
+
+.dropForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: left space-evenly;
+    align-items: flex-start;
+    .MuiButton-root {
+        margin-top: 35px;
+        align-self: center;
+    }
+}
+
+.dropBox {
+    width: 30vw; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    min-height: 15vh;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    background: #121212;
+    cursor: pointer;
+
+    .div {
+        width: 100%;
+    }
+}
+
+.imageListElement {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}

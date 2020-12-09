@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { PictureAsPdf, Description } from '@material-ui/icons';
-import { Button, FormControl, InputLabel, MenuItem, Select, CircularProgress, Fab } from '@material-ui/core';
+import { PictureAsPdf, Description, Image, Close } from '@material-ui/icons';
+import { Button, FormControl, InputLabel, MenuItem, Select, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import AddIcon from "@material-ui/icons/Add";
+
+import './newTask.scss';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -15,46 +16,58 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function NewTask() {
+function NewTask(props) {
     const [fileName, setFileName] = React.useState('');
     const [fileType, setFileType] = React.useState();
     const [fileContent, setFileContent] = React.useState('');
     const [level, setLevel] = React.useState('');
     const [thema, setThema] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [uploading, setUploading] = React.useState(false);
+    const [test, setTest] = React.useState(new Map());
 
     const classes = useStyles();
 
-    const addTask = async (event) => {
+    const test2 = async (event) => {
         event.preventDefault();
+        setUploading(true);
 
-        //console.log(new FormData(formData.current));
-        const target = event.target;
-        const formData = new FormData(target)
-
-        for(var i of formData.getAll('upload-photo')) {
-            console.log(i);
+        var images = new FormData();
+        for(var [, value] of test.entries()) {
+            if(value.type.includes('image')) images.append(value.type, value);
         }
 
-        formData.delete( 'textFile' );
+        if(fileName !== '' && level !== '' && thema !== '') {
+            const res = await uploadImages(images).then(r => r.json());
+            console.log(res);
+            await newTask(images, res);
+            setUploading(false);
+            alert("Task successfully uploaded");
+        } else {
+            setUploading(false);
+            alert("Check your Input");
+        }
+    }
 
+    const newTask = async (images, imageNames) => {
         const options = {
             method: 'POST',
-            body: formData
-        }
-
-        await fetch('/images/upload', options).then(res => console.log(res));
-
-
-        const requestOptions = {
-            method: 'POST',
             headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ Titel: fileName, Text: fileContent, Level: level, Thema: thema })
+            body: JSON.stringify({ Titel: fileName, Text: fileContent, Level: level, Thema: thema, Images: imageNames })
         }
+        const res = await fetch('/tasks/new', options).then(res => res.json());
 
-        const res = fetch('/tasks/new', requestOptions).then(res => res.json());
+        return res;
+    }
 
-        res.then(res => res.status === 200 ? alert('Aufgabe erfolgreich hinzugefügt!') : alert('Something went wrong!'))
+    const uploadImages = async (images) => {
+        const options = {
+            method: 'POST',
+            body: images
+        }
+        const res = await fetch('/images/upload', options)
+
+        return res;
     }
 
     const handleChangeLevel = (event) => {
@@ -70,6 +83,9 @@ function NewTask() {
         acceptedFiles.forEach((file) => {
             setFileType(file.name.split('.')[1])
             console.log(file.type)
+            const fi = test;
+            fi.set(file.name, file);
+            setTest(fi);
             if(file.type === "text/plain" || file.type === "text/html") {
                 setFileName(file.name.split('.')[0])
                 const reader = new FileReader()
@@ -86,74 +102,79 @@ function NewTask() {
             }
         })
         setLoading(false);
-    }, [])
+    }, [test])
 
     const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
     return (
-        <div style={{transform: "translateY(-50%)", marginTop: "25%", display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
-            <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", marginBottom: "25px"}}>
-                {loading ? <CircularProgress/> : <>
-                    {fileType != null && (fileType === 'pdf' ? <PictureAsPdf fontSize="large"/> : <Description fontSize="large"/>)}
-                </>}
-                {fileName && fileName}
-            </div>
-            <div style={{width: "30vw", display: "flex", justifyContent: "space-between", alignItems: "center", flexDirection: "row", marginBottom: "25px"}}>
-                <FormControl style={{width: "40%"}} className={classes.FormControl}>
-                    <InputLabel id="demo-simple-selected-label">Thema</InputLabel>
-                    <Select 
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={thema}
-                        onChange={handleChangeThema}
-                    >
-                        <MenuItem value="Python">Python</MenuItem>
-                        <MenuItem value="Java">Java</MenuItem>
-                        <MenuItem value="DB">DB</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl style={{width: "40%"}} className={classes.FormControl}>
-                    <InputLabel id="demo-simple-select-label">Level</InputLabel>
-                    <Select 
-                        labelId="demo-simple-selec-label"
-                        id="demo-simple-selec"
-                        value={level}
-                        onChange={handleChangeLevel}
-                    >
-                        <MenuItem value="Anfänger">Anfänger</MenuItem>
-                        <MenuItem value="Fortgeschritten">Fortgeschritten</MenuItem>
-                        <MenuItem value="Profi">Profi</MenuItem>
-                    </Select>
-                </FormControl>
-            </div>
-            <form onSubmit={(e) => addTask(e, )}>
-                <div {...getRootProps()} style={{width: "30vw", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-                    <p>Text: </p>
-                    <input name="textFile" accept=".txt, .html" {...getInputProps()} />
-                    <div style={{width: "100%", height: "20vh", border: "1px solid white", background: "#121212", cursor: "pointer"}}></div>
-                    <p>Drag 'n' drop some files here, or click to select files</p>
+        <>
+        {
+            uploading ?
+
+            <CircularProgress />
+
+            :
+
+            <div className="root">
+                <Button className="exitButton" onClick={() => props.closeNewTask()}><Close/> Zurück</Button>
+                <div className="taskDisplay">
+                    {fileName && (loading ? <CircularProgress/> : <>
+                        {fileType != null && (fileType === 'pdf' ? <PictureAsPdf fontSize="large"/> : <Description fontSize="large"/>)}
+                    </>)}
+                    {fileName && fileName}
                 </div>
-                <label htmlFor="upload-photo">
-                    <input
-                    style={{ display: "none" }}
-                    multiple={true}
-                    id="upload-photo"
-                    name="upload-photo"
-                    type="file"
-                    />
-                    <Fab
-                    color="secondary"
-                    size="small"
-                    component="span"
-                    aria-label="add"
-                    variant="extended"
-                    >
-                        <AddIcon /> Upload photo
-                    </Fab>
-                </label>
-                <Button type="submit" variant="outlined" color="primary">Upload</Button>
-            </form>
-        </div>
+                <div className="inputSelectorBox">
+                    <FormControl className={"inputSelector " + classes.FormControl}>
+                        <InputLabel id="demo-simple-selected-label">Thema</InputLabel>
+                        <Select 
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={thema}
+                            onChange={handleChangeThema}
+                        >
+                            <MenuItem value="Python">Python</MenuItem>
+                            <MenuItem value="Java">Java</MenuItem>
+                            <MenuItem value="DB">DB</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl className={"inputSelector " + classes.FormControl}>
+                        <InputLabel id="demo-simple-select-label">Level</InputLabel>
+                        <Select 
+                            labelId="demo-simple-selec-label"
+                            id="demo-simple-selec"
+                            value={level}
+                            onChange={handleChangeLevel}
+                        >
+                            <MenuItem value="Anfänger">Anfänger</MenuItem>
+                            <MenuItem value="Fortgeschritten">Fortgeschritten</MenuItem>
+                            <MenuItem value="Profi">Profi</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+                <form className="dropForm" onSubmit={(e) => test2(e)}>
+                    <p>Text: </p>
+                    <div {...getRootProps()} className="dropBox">
+                        <input name="textFile" {...getInputProps()} />
+                        <div>
+                            {Array.from(test).filter(([key, value]) => value.type.includes('text')).length === 0 && <p>Drag 'n' drop some files here, or click to select files</p>}
+                            {test && Array.from(test).filter(([key, value]) => value.type.includes('text')).map(([key, value]) => <p className="imageListElement" key={key}><Description/> - {value.name.split('.')[0]}</p>)}
+                        </div>
+                    </div>
+                    <p>Images: </p>
+                    <div {...getRootProps()} className="dropBox">
+                        <input name="textFile" {...getInputProps()} />
+                        <div>
+                            {Array.from(test).filter(([key, value]) => value.type.includes('image')).length === 0 && <p>Drag 'n' drop some files here, or click to select files</p>}
+                            {test && Array.from(test).filter(([key, value]) => value.type.includes('image')).map(([key, value]) => <p className="imageListElement" key={key}><Image/>  - {value.name.split('.')[0]}</p>)}
+                        </div>
+                    </div>
+                    <Button type="submit" variant="outlined" color="primary">Upload</Button>
+                </form>
+            </div>
+
+        }
+        </>
+        
     )
 }
 

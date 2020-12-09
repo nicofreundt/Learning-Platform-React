@@ -61,11 +61,11 @@ class App extends Component {
         </ThemeProvider>
         {this.state.themeVariable === 'dark' ?
           <ThemeProvider theme={darkTheme}>
-            <Menu newTask={this.state.newTask} className="menu"/>
+            <Menu closeNewTask={setNewTask} newTask={this.state.newTask} className="menu"/>
           </ThemeProvider>
         :
           <ThemeProvider theme={lightTheme}>
-            <Menu newTask={this.state.newTask} className="menu"/>
+            <Menu closeNewTask={setNewTask} newTask={this.state.newTask} className="menu"/>
           </ThemeProvider>
         }
       </div>

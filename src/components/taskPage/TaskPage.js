@@ -16,8 +16,7 @@ function TaskPage(props) {
 
     const [checkedState, setCheckedState] = useState(false);
     const [loading, setLoading] = useState(true);
-
-    const images = [ Picture, Picture2, Picture3 ];
+    const [images, setImages] = useState([]);
 
     const handleChange = (event) => {
         if(!checkedState) {
@@ -100,7 +99,13 @@ function TaskPage(props) {
                 setLoading(false);
             });
         }
+        const getImages = async () => {
+            const res = await fetch(`/images/paths/${props.task.ID}`).then(res => res.json());
+            console.log(res);
+            setImages(res);
+        }
         getStatus(props.task.ID, localStorage.getItem('userID'));
+        getImages();
     }, [props.task.ID, checkedState]);
 
     var task = props.task;
@@ -119,7 +124,7 @@ function TaskPage(props) {
                 <Slider previousButton={<ArrowBackIosOutlined fontSize="large"/>} nextButton={<ArrowForwardIosOutlined fontSize="large"/>}>
                     {images.map((image, index) => 
                         <div key={index}>
-                            <img src={image} alt={"pic" + index}></img>
+                            <img src={"http://localhost:3001/images/" + image.imagePath} alt={"pic" + index}></img>
                         </div>)}
                 </Slider>
             </div>

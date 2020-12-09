@@ -135,7 +135,7 @@ class Content extends Component {
                             <CircularProgress style={{marginTop: '25%'}}/>
                             :
                             <div>
-                                {this.state.newTask ? <NewTask/> : 
+                                {this.state.newTask ? <NewTask closeNewTask={this.props.closeNewTask}/> : 
                                 <>{this.state.selected ? 
                                     <div>
                                         <TaskPage task={this.state.task} func={this.unselectTask}/>
