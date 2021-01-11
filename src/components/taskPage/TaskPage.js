@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
+import ReactMarkdown from 'react-markdown';
 import './taskPage.scss';
 import { Button, makeStyles, Fab, CircularProgress } from '@material-ui/core';
 import Slider from 'react-animated-slider';
 import 'react-animated-slider/build/horizontal.css';
-import Picture from '../../resources/images/code-3637299_1920.jpg';
-import Picture2 from '../../resources/images/hacker-2883635_1920.jpg';
-import Picture3 from '../../resources/images/question-mark-2883628_1920.jpg';
 import { ArrowBack, ArrowForwardIosOutlined, ArrowBackIosOutlined } from '@material-ui/icons';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import { green } from '@material-ui/core/colors';
+import SimpleImageSlider from 'react-simple-image-slider';
 
 function TaskPage(props) {
 
@@ -102,7 +101,11 @@ function TaskPage(props) {
         const getImages = async () => {
             const res = await fetch(`/images/paths/${props.task.ID}`).then(res => res.json());
             console.log(res);
-            setImages(res);
+            const arr = [];
+            for(var i of res) {
+                arr.push({url: "/images/" + i.imagePath});
+            }
+            setImages(arr);
         }
         getStatus(props.task.ID, localStorage.getItem('userID'));
         getImages();
@@ -118,15 +121,18 @@ function TaskPage(props) {
 
     return (
         <div className="taskPage" style={{display: "flex", flexDirection: "column"}}>
-            <p className="textWrapper" dangerouslySetInnerHTML={{__html: task.Text}}></p>
+            <p className="textWrapper">
+                <ReactMarkdown>{task.Text}</ReactMarkdown>
+            </p>
             <h3 className="imageTitle">Bilder und Grafiken</h3>
             <div style={{display: "flex", justifyContent: "center"}}>
+                <SimpleImageSlider width={896} height={504} images={images}/>{/* 
                 <Slider previousButton={<ArrowBackIosOutlined fontSize="large"/>} nextButton={<ArrowForwardIosOutlined fontSize="large"/>}>
                     {images.map((image, index) => 
                         <div key={index}>
                             <img src={"http://localhost:3001/images/" + image.imagePath} alt={"pic" + index}></img>
                         </div>)}
-                </Slider>
+                </Slider> */}
             </div>
             <div style={{justifyContent: "space-between", display: "flex"}}>
                 <Button onClick={() => props.func(true)}><ArrowBack/>&nbsp;&nbsp;Back</Button>
