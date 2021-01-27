@@ -55,7 +55,7 @@ function NewTask(props) {
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ Titel: fileName, Text: fileContent, Level: level, Thema: thema, Images: imageNames })
         }
-        const res = await fetch('/tasks/new', options).then(res => res.json());
+        const res = await fetch('https://nicofreundt.ddns.net:3001/tasks/new', options).then(res => res.json());
 
         return res;
     }
@@ -65,7 +65,7 @@ function NewTask(props) {
             method: 'POST',
             body: images
         }
-        const res = await fetch('/images/upload', options)
+        const res = await fetch('https://nicofreundt.ddns.net:3001/images/upload', options)
 
         return res;
     }

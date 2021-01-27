@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import ReactMarkdown from 'react-markdown';
 import './taskPage.scss';
@@ -67,7 +67,7 @@ function TaskPage(props) {
             body: JSON.stringify({ taskID, userID, status })
         }
 
-        const res = fetch('/status/set', requestOptions).then(res => res.json());
+        const res = fetch('https://nicofreundt.ddns.net:3001/status/set', requestOptions).then(res => res.json());
 
         res.then((result) => {
             if(result.status !== 200) {
@@ -78,6 +78,22 @@ function TaskPage(props) {
             }
         })   
     }
+
+    const getImages = async () => {
+        const res = await fetch(`https://nicofreundt.ddns.net:3001/images/paths/${props.task.ID}`).then(res => res.json());
+        console.log(res);
+        const arr = [];
+        for(var i of res) {
+            arr.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
+            arr.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
+            console.log(i.imagePath);
+        }
+        setImages(arr);
+        console.log(arr);
+        console.log(images);
+    }
+
+    getImages();
     
     useEffect(() => {
         const getStatus = (taskID, userID) => {
@@ -91,24 +107,28 @@ function TaskPage(props) {
                 body: JSON.stringify({ taskID, userID, status })
             }
     
-            const res = fetch('/status/get', requestOptions).then(res => res.json());
+            const res = fetch('https://nicofreundt.ddns.net:3001/status/get', requestOptions).then(res => res.json());
     
             res.then((result) => {
                 setCheckedState(result.status);
                 setLoading(false);
             });
         }
-        const getImages = async () => {
-            const res = await fetch(`/images/paths/${props.task.ID}`).then(res => res.json());
+        /*const getImages = async () => {
+            const res = await fetch(`https://nicofreundt.ddns.net:3001/images/paths/${props.task.ID}`).then(res => res.json());
             console.log(res);
             const arr = [];
             for(var i of res) {
-                arr.push({url: "/images/" + i.imagePath});
+                images.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
+				images.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
+				console.log(i.imagePath);
             }
-            setImages(arr);
-        }
+            //setImages(arr);
+			console.log(arr);
+			console.log(images);
+        }*/
         getStatus(props.task.ID, localStorage.getItem('userID'));
-        getImages();
+        //getImages();
     }, [props.task.ID, checkedState]);
 
     var task = props.task;
@@ -126,11 +146,11 @@ function TaskPage(props) {
             </p>
             <h3 className="imageTitle">Bilder und Grafiken</h3>
             <div style={{display: "flex", justifyContent: "center"}}>
-                <SimpleImageSlider width={896} height={504} images={images}/>{/* 
+                {images.length > 0 && <SimpleImageSlider width={896} height={504} images={images}/>}{/* 
                 <Slider previousButton={<ArrowBackIosOutlined fontSize="large"/>} nextButton={<ArrowForwardIosOutlined fontSize="large"/>}>
                     {images.map((image, index) => 
                         <div key={index}>
-                            <img src={"http://localhost:3001/images/" + image.imagePath} alt={"pic" + index}></img>
+                            <img src={"https://nicofreundt.ddns.net:3001/images/" + image.imagePath} alt={"pic" + index}></img>
                         </div>)}
                 </Slider> */}
             </div>

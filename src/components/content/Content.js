@@ -50,20 +50,20 @@ class Content extends Component {
     }
 
     componentDidMount() {
-        fetch(`/tasks/${this.props.topic}`)
+        fetch(`https://nicofreundt.ddns.net:3001/tasks/${this.props.topic}`)
             .then(res => res.json())    
             .then(aufgaben => this.setState({ tasks: aufgaben }));
-        fetch(`/status/get/${localStorage.getItem('userID')}`)
+        fetch(`https://nicofreundt.ddns.net:3001/status/get/${localStorage.getItem('userID')}`)
             .then(res => res.json())
             .then(status => this.setState({ status: status, isLoading: false }));
     }
 
     componentDidUpdate() {
         if(this.state.isLoading) {
-            fetch(`/tasks/${this.props.topic}`)
+            fetch(`https://nicofreundt.ddns.net:3001/tasks/${this.props.topic}`)
                 .then(res => res.json())    
                 .then(aufgaben => this.setState({ tasks: aufgaben }));
-            fetch(`/status/get/${localStorage.getItem('userID')}`)
+            fetch(`https://nicofreundt.ddns.net:3001/status/get/${localStorage.getItem('userID')}`)
                 .then(res => res.json())
                 .then(status => this.setState({ status: status, isLoading: false }));
         }
