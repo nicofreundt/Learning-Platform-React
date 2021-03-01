@@ -3,9 +3,8 @@ import clsx from 'clsx';
 import ReactMarkdown from 'react-markdown';
 import './taskPage.scss';
 import { Button, makeStyles, Fab, CircularProgress } from '@material-ui/core';
-import Slider from 'react-animated-slider';
 import 'react-animated-slider/build/horizontal.css';
-import { ArrowBack, ArrowForwardIosOutlined, ArrowBackIosOutlined } from '@material-ui/icons';
+import { ArrowBack } from '@material-ui/icons';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import { green } from '@material-ui/core/colors';
@@ -78,22 +77,6 @@ function TaskPage(props) {
             }
         })   
     }
-
-    const getImages = async () => {
-        const res = await fetch(`https://nicofreundt.ddns.net:3001/images/paths/${props.task.ID}`).then(res => res.json());
-        console.log(res);
-        const arr = [];
-        for(var i of res) {
-            arr.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
-            arr.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
-            console.log(i.imagePath);
-        }
-        setImages(arr);
-        console.log(arr);
-        console.log(images);
-    }
-
-    getImages();
     
     useEffect(() => {
         const getStatus = (taskID, userID) => {
@@ -111,24 +94,22 @@ function TaskPage(props) {
     
             res.then((result) => {
                 setCheckedState(result.status);
-                setLoading(false);
             });
         }
-        /*const getImages = async () => {
+        const getImages = async () => {
             const res = await fetch(`https://nicofreundt.ddns.net:3001/images/paths/${props.task.ID}`).then(res => res.json());
             console.log(res);
             const arr = [];
             for(var i of res) {
-                images.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
-				images.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
+                arr.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
 				console.log(i.imagePath);
             }
-            //setImages(arr);
-			console.log(arr);
-			console.log(images);
-        }*/
+            setImages(arr);
+            console.log(arr);
+            setLoading(false);
+        }
         getStatus(props.task.ID, localStorage.getItem('userID'));
-        //getImages();
+        getImages();
     }, [props.task.ID, checkedState]);
 
     var task = props.task;
@@ -146,20 +127,11 @@ function TaskPage(props) {
             </p>
             <h3 className="imageTitle">Bilder und Grafiken</h3>
             <div style={{display: "flex", justifyContent: "center"}}>
-                {images.length > 0 && <SimpleImageSlider width={896} height={504} images={images}/>}{/* 
-                <Slider previousButton={<ArrowBackIosOutlined fontSize="large"/>} nextButton={<ArrowForwardIosOutlined fontSize="large"/>}>
-                    {images.map((image, index) => 
-                        <div key={index}>
-                            <img src={"https://nicofreundt.ddns.net:3001/images/" + image.imagePath} alt={"pic" + index}></img>
-                        </div>)}
-                </Slider> */}
+                {loading && <CircularProgress size={68}/>}
+                {images.length > 0 && <SimpleImageSlider width={896} height={504} images={images}/>}
             </div>
             <div style={{justifyContent: "space-between", display: "flex"}}>
                 <Button onClick={() => props.func(true)}><ArrowBack/>&nbsp;&nbsp;Back</Button>
-                {/* <FormControlLabel
-                    control={<Checkbox checked={state.checkedState} icon={<CheckCircleOutlineSharp />} checkedIcon={<CheckCircleSharp />} onChange={handleChange} name="checkedState" />}
-                    label="Done"
-                /> */}
                 <div className={classes.wrapper}>
                     <Fab
                     aria-label="save"

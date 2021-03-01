@@ -71,9 +71,9 @@ class Content extends Component {
 
     handleNav = (direction) => {
         if (direction === 'left') {
-            this.navRef ? (this.navRef.current.scrollLeft -= 200) : console.log('');
+            this.navRef ? (this.navRef.current.scrollLeft -= 1500) : console.log('');
         } else {
-            this.navRef ? (this.navRef.current.scrollLeft += 200) : console.log('');
+            this.navRef ? (this.navRef.current.scrollLeft += 1500) : console.log('');
         }
     }
 
