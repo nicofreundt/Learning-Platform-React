@@ -1,0 +1,23 @@
+.Buttons {
+    position: relative;
+    top: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .MuiButtonBase-root {
+        margin: 5px 0px;
+    }
+}
+
+.start {
+    height: 100vh;
+    background: black;
+    color: #CCC;
+}
+
+.headlines {
+    position: relative;
+    top: 100px;
+    text-align: center;
+}

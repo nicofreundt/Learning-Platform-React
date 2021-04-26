@@ -1,9 +1,22 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+//import { render } from '@testing-library/react';
 import App from './App';
+import Enzyme, { shallow, render, mount } from 'enzyme';
+import toJson from 'enzyme-to-json';
+import Adapter from 'enzyme-adapter-react-16';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+Enzyme.configure({ adapter: new Adapter() })
+
+it('renders correctly enzyme', () => {
+  const wrapper = shallow(<App />);
+
+  expect(wrapper.instance().state.newTask).toBeFalsy();
+
+  wrapper.instance().setNewTask();
+
+  expect(wrapper.instance().state.newTask).toBeFalsy();
 });
+
+it('renders corr', () => {
+  const wrapper = render(<App />);
+})

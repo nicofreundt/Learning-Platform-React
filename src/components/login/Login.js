@@ -33,7 +33,7 @@ const Login = (props) => {
 
     const login = () => {
         auth.login(() => {
-            props.history.push(`/`);
+            props.history.push(`/learning`);
         }, username, password)
     }
 

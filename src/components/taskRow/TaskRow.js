@@ -60,14 +60,12 @@ class TaskRow extends Component {
 
         tasks.sort(compare);
 
-        console.log(tasks);
-
         return (
             <div className="taskRow">
                 <div><Button onClick={() => handleNav('left')} id="left-button"><ArrowBackIos /></Button></div>
                 <div className="parent" ref={this.navRef}>
                     {this.props.tasks.filter(task => task.Topic === this.props.topic).map(a =>
-                        <div className="taskWrapper" onClick={() => this.props.func(a)} id={a.ID} key={a.ID}>
+                        <div className="taskWrapper" onClick={() => this.props.func(a, this.props.statusArr.get(a.ID))} id={a.ID} key={a.ID}>
                             <TaskCard active={typeof this.props.statusArr !== 'undefined' ? !this.props.statusArr.get(a.ID) : true} className="child" value={a} />
                         </div>
                     )}

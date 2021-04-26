@@ -1,3 +1,4 @@
+import { BASE_URL } from './resources/backend';
 
 export var authenticated = false;
 
@@ -16,10 +17,10 @@ class Auth {
             body: JSON.stringify({ username, password })
         }
 
-        const res = fetch('https://nicofreundt.ddns.net:3001/users', requestOptions).then(res => res.json())
+        const res = fetch(`${BASE_URL}/users`, requestOptions).then(res => res.json())
 
         res.then((result) => {
-            if(result.status) {
+            if (result.status) {
                 authenticated = result.status;
                 localStorage.setItem('user', result.username);
                 localStorage.setItem('userID', result.userID);
@@ -38,16 +39,27 @@ class Auth {
             body: JSON.stringify({ username, password, mail })
         }
 
-        const res = fetch('https://nicofreundt.ddns.net:3001/users/new', requestOptions).then(res => res.json())
+        const res = fetch(`${BASE_URL}/users/new`, requestOptions).then(res => res.json())
 
         res.then((result) => {
-            if(result.status === 200) {
+            if (result.status === 200) {
                 console.log('Alles in Ordnung');
             } else {
                 console.log(`Error: ${result.message}`);
             }
             cb();
         })
+    }
+
+    async getRole() {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ userID: localStorage.getItem('userID') })
+        }
+
+        const res = await fetch(`${BASE_URL}/users/getRole`, requestOptions).then(res => res.json())
+        return res.role;
     }
 
     logout(cb) {

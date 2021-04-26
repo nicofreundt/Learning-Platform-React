@@ -4,28 +4,29 @@ import { CircularProgress, Box, Typography } from '@material-ui/core';
 import TaskRow from '../taskRow/TaskRow';
 import TaskPage from '../taskPage/TaskPage';
 import NewTask from '../newTask/newTask';
+import { getTasksByTopic, getTaskStatusByUser } from '../../resources/backend';
 
 function CircularProgressWithLabel(props) {
     return (
-      <Box position="relative" display="inline-flex" style={{marginLeft: "25px"}}>
-        <CircularProgress variant="static" {...props} />
-        <Box
-          top={0}
-          left={0}
-          bottom={0}
-          right={0}
-          position="absolute"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
-            props.value,
-          )}%`}</Typography>
+        <Box position="relative" display="inline-flex" style={{ marginLeft: "25px" }}>
+            <CircularProgress variant="static" {...props} />
+            <Box
+                top={0}
+                left={0}
+                bottom={0}
+                right={0}
+                position="absolute"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
+                    props.value,
+                )}%`}</Typography>
+            </Box>
         </Box>
-      </Box>
     );
-  }
+}
 
 class Content extends Component {
     constructor(props) {
@@ -38,34 +39,27 @@ class Content extends Component {
             selected: false,
             status: [],
             updated: false,
-            newTask: props.newTask
+            newTask: props.newTask,
+            tstatus: false
         };
 
         this.navRef = React.createRef();
     }
 
     setNewTask() {
-        this.setState({newTask: true});
+        this.setState({ newTask: true });
         console.log("Hallo")
     }
 
     componentDidMount() {
-        fetch(`https://nicofreundt.ddns.net:3001/tasks/${this.props.topic}`)
-            .then(res => res.json())    
-            .then(aufgaben => this.setState({ tasks: aufgaben }));
-        fetch(`https://nicofreundt.ddns.net:3001/status/get/${localStorage.getItem('userID')}`)
-            .then(res => res.json())
-            .then(status => this.setState({ status: status, isLoading: false }));
+        getTasksByTopic(this.props.topic).then(aufgaben => this.setState({ tasks: aufgaben }));
+        getTaskStatusByUser().then(status => this.setState({ status: status, isLoading: false }));
     }
 
     componentDidUpdate() {
-        if(this.state.isLoading) {
-            fetch(`https://nicofreundt.ddns.net:3001/tasks/${this.props.topic}`)
-                .then(res => res.json())    
-                .then(aufgaben => this.setState({ tasks: aufgaben }));
-            fetch(`https://nicofreundt.ddns.net:3001/status/get/${localStorage.getItem('userID')}`)
-                .then(res => res.json())
-                .then(status => this.setState({ status: status, isLoading: false }));
+        if (this.state.isLoading) {
+            getTasksByTopic(this.props.topic).then(aufgaben => this.setState({ tasks: aufgaben }));
+            getTaskStatusByUser().then(status => this.setState({ status: status, isLoading: false }));
         }
     }
 
@@ -77,15 +71,15 @@ class Content extends Component {
         }
     }
 
-    selectedTask = (t) => {
-        this.setState({task: t, selected: true});
+    selectedTask = (t, s) => {
+        this.setState({ task: t, selected: true, tstatus: s });
     }
 
     unselectTask = (x) => {
-        if(x) {
-            this.setState({isLoading: true});
+        if (x) {
+            this.setState({ isLoading: true });
         };
-        this.setState({task: null, selected: false});
+        this.setState({ task: null, selected: false });
     }
 
     render() {
@@ -102,22 +96,22 @@ class Content extends Component {
         for (let i in levelNames) {
             var helpArray = tasks.filter(task => task.Topic === this.props.topic).filter(task => task.Level === levelNames[i]);
             var helpArrayS;
-            if(status.length !== 0) {
+            if (status.length !== 0) {
                 helpArrayS = status.filter(st => st.topic === this.props.topic).filter(s => s.level === levelNames[i]);
                 var numPos = 0;
                 var myMap = new Map();
-                if(helpArrayS.length !== 0) {
-                    for(let i of helpArrayS) {
-                        if(i.status !== 0) {
+                if (helpArrayS.length !== 0) {
+                    for (let i of helpArrayS) {
+                        if (i.status !== 0) {
                             numPos = numPos + 1;
                         }
-                        myMap.set(i.id, i.status); 
+                        myMap.set(i.id, i.status);
                     }
                     arrM[i] = myMap;
                     arrS[i] = Math.round((numPos / helpArray.length) * 100);
                 };
             }
-            if(helpArray.length !== 0) arr[i] = helpArray;
+            if (helpArray.length !== 0) arr[i] = helpArray;
         }
 
         return (
@@ -127,44 +121,44 @@ class Content extends Component {
                 id={`vertical-tabpanel-${this.props.index}`}
                 aria-labelledby={`vertical-tab-${this.props.index}`}
                 {...this.props.other}
-                style={{marginLeft: '225px'}}
-                >
+                style={{ marginLeft: '225px' }}
+            >
                 {this.props.value === this.props.index && (
                     <div>
-                        {isLoading?
-                            <CircularProgress style={{marginTop: '25%'}}/>
+                        {isLoading ?
+                            <CircularProgress style={{ marginTop: '25%' }} />
                             :
                             <div>
-                                {this.state.newTask ? <NewTask closeNewTask={this.props.closeNewTask}/> : 
-                                <>{this.state.selected ? 
-                                    <div>
-                                        <TaskPage task={this.state.task} func={this.unselectTask}/>
-                                    </div>
-                                :
-                                    <>{arr.length !== 0 ? 
-                                        <>{arr.map((task, index) => 
-                                            <div key={task[0].ID}>
-                                                {task[0].Level !== level ?
-                                                    <h1 className="headLine">{level = task[0].Level}<CircularProgressWithLabel value={typeof arrS[index] !== 'undefined' ? arrS[index] : 0}/></h1>
-                                                    :
-                                                    null
-                                                }
-                                                <div className="task-container">
-                                                    <TaskRow statusArr={arrM[index]} func={this.selectedTask} topic={this.props.topic} tasks={task}/>
+                                {this.state.newTask ? <NewTask closeNewTask={this.props.closeNewTask} /> :
+                                    <>{this.state.selected ?
+                                        <div>
+                                            <TaskPage status={this.state.tstatus} task={this.state.task} func={this.unselectTask} />
+                                        </div>
+                                        :
+                                        <>{arr.length !== 0 ?
+                                            <>{arr.map((task, index) =>
+                                                <div key={task[0].ID}>
+                                                    {task[0].Level !== level ?
+                                                        <h1 className="headLine">{level = task[0].Level}<CircularProgressWithLabel value={typeof arrS[index] !== 'undefined' ? arrS[index] : 0} /></h1>
+                                                        :
+                                                        null
+                                                    }
+                                                    <div className="task-container">
+                                                        <TaskRow statusArr={arrM[index]} func={this.selectedTask} topic={this.props.topic} tasks={task} />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}</>
-                                        : 
-                                        <div style={{display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", textAlign: "center", marginTop: "25%"}}>COULD NOT LOAD ANY TASKS</div>
-                                    }</>
-                                }</>}
+                                            )}</>
+                                            :
+                                            <div style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", textAlign: "center", marginTop: "25%" }}>COULD NOT LOAD ANY TASKS</div>
+                                        }</>
+                                    }</>}
                             </div>
                         }
                     </div>
                 )}
             </div>
         );
-        
+
     };
 }
 

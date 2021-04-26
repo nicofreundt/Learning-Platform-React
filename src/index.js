@@ -5,6 +5,7 @@ import App from './App';
 import Login from './components/login/Login';
 import ProtectedRoute from './components/protectedRoute/ProtectedRoute';
 import * as serviceWorker from './serviceWorker';
+import Start from './components/start/Start';
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,7 +17,8 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route className="all" exact path="/login" component={Login}/>
-        <ProtectedRoute exact path="/" component={App}/>
+        <Route exact path="/" component={Start}/>
+        <ProtectedRoute exact path="/learning" component={App}/>
         <Route path="*" component={() => <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>404 NOT FOUND</div>}/>
       </Switch>
     </Router>

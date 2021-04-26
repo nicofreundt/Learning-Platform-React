@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import ReactMarkdown from 'react-markdown';
 import './taskPage.scss';
@@ -9,15 +9,16 @@ import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
 import { green } from '@material-ui/core/colors';
 import SimpleImageSlider from 'react-simple-image-slider';
+import { getImagesForTask, getSpecificTaskStatus, setStatusForTask, BASE_URL } from '../../resources/backend';
 
 function TaskPage(props) {
 
-    const [checkedState, setCheckedState] = useState(false);
+    const [checkedState, setCheckedState] = useState(props.status);
     const [loading, setLoading] = useState(true);
     const [images, setImages] = useState([]);
 
     const handleChange = (event) => {
-        if(!checkedState) {
+        if (!checkedState) {
             setLoading(true);
             setStatus(props.task.ID, localStorage.getItem('userID'));
         } else {
@@ -27,119 +28,110 @@ function TaskPage(props) {
 
     const useStyles = makeStyles((theme) => ({
         root: {
-          display: 'flex',
-          alignItems: 'center',
+            display: 'flex',
+            alignItems: 'center',
         },
         wrapper: {
-          margin: theme.spacing(1),
-          position: 'relative',
+            margin: theme.spacing(1),
+            position: 'relative',
         },
         buttonSuccess: {
-          backgroundColor: green[500],
-          '&:hover': {
-            backgroundColor: green[700],
-          },
+            backgroundColor: green[500],
+            '&:hover': {
+                backgroundColor: green[700],
+            },
         },
         fabProgress: {
-          color: green[500],
-          position: 'absolute',
-          top: -6,
-          left: -6,
-          zIndex: 1,
+            color: green[500],
+            position: 'absolute',
+            top: -6,
+            left: -6,
+            zIndex: 1,
         },
         buttonProgress: {
-          color: green[500],
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          marginTop: -12,
-          marginLeft: -12,
+            color: green[500],
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            marginTop: -12,
+            marginLeft: -12,
         },
-      }));
+    }));
 
     const setStatus = (taskID, userID) => {
         const status = checkedState ? 0 : 1;
 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ taskID, userID, status })
-        }
-
-        const res = fetch('https://nicofreundt.ddns.net:3001/status/set', requestOptions).then(res => res.json());
-
-        res.then((result) => {
-            if(result.status !== 200) {
+        setStatusForTask(taskID, userID, status).then((result) => {
+            if (result.status !== 200) {
                 console.log(result.message);
             } else {
                 setLoading(false);
                 setCheckedState(!checkedState);
             }
-        })   
+        })
     }
-    
+
+    const getStatus = async (taskID, userID) => {
+        //fetch status from backend
+
+        const status = checkedState;
+
+        getSpecificTaskStatus(taskID, userID, status).then((result) => {
+            console.log(result);
+            setCheckedState(result.status);
+        });
+    }
+
+    const getStatusRef = useRef(getStatus);
+
+    const getImages = async () => {
+        const res = await getImagesForTask(props.task.ID);
+        console.log(res);
+        const arr = [];
+        for (var i of res) {
+            arr.push({ url: `${BASE_URL}/images/${i.imagePath}` });
+            console.log(i.imagePath);
+        }
+        setImages(arr);
+        console.log(arr);
+        setLoading(false);
+    }
+
+    const getImagesRef = useRef(getImages);
+
     useEffect(() => {
-        const getStatus = (taskID, userID) => {
-            //fetch status from backend
-    
-            const status = checkedState;
-    
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify({ taskID, userID, status })
-            }
-    
-            const res = fetch('https://nicofreundt.ddns.net:3001/status/get', requestOptions).then(res => res.json());
-    
-            res.then((result) => {
-                setCheckedState(result.status);
-            });
-        }
-        const getImages = async () => {
-            const res = await fetch(`https://nicofreundt.ddns.net:3001/images/paths/${props.task.ID}`).then(res => res.json());
-            console.log(res);
-            const arr = [];
-            for(var i of res) {
-                arr.push({url: "https://nicofreundt.ddns.net:3001/images/" + i.imagePath});
-				console.log(i.imagePath);
-            }
-            setImages(arr);
-            console.log(arr);
-            setLoading(false);
-        }
-        getStatus(props.task.ID, localStorage.getItem('userID'));
-        getImages();
+        getStatusRef.current(props.task.ID, localStorage.getItem('userID'));
+        //getStatus(props.task.ID, localStorage.getItem('userID'));
+        //getImages();
+        getImagesRef.current();
     }, [props.task.ID, checkedState]);
 
     var task = props.task;
 
     const classes = useStyles();
 
-    const buttonClassname = clsx({
-        [classes.buttonSuccess]: checkedState,
-        });
+    const buttonClassname = clsx({ [classes.buttonSuccess]: checkedState });
 
     return (
-        <div className="taskPage" style={{display: "flex", flexDirection: "column"}}>
+        <div className="taskPage" style={{ display: "flex", flexDirection: "column" }}>
             <p className="textWrapper">
                 <ReactMarkdown>{task.Text}</ReactMarkdown>
             </p>
-            <h3 className="imageTitle">Bilder und Grafiken</h3>
-            <div style={{display: "flex", justifyContent: "center"}}>
-                {loading && <CircularProgress size={68}/>}
-                {images.length > 0 && <SimpleImageSlider width={896} height={504} images={images}/>}
+            {images.length > 0 && <h3 className="imageTitle">Bilder und Grafiken</h3>}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                {loading && <CircularProgress size={68} />}
+                {images.length > 0 && <SimpleImageSlider width={896} height={504} images={images} />}
             </div>
-            <div style={{justifyContent: "space-between", display: "flex"}}>
-                <Button onClick={() => props.func(true)}><ArrowBack/>&nbsp;&nbsp;Back</Button>
+            <div style={{ justifyContent: "space-between", display: "flex" }}>
+                <Button onClick={() => props.func(true)}><ArrowBack />&nbsp;&nbsp;Back</Button>
                 <div className={classes.wrapper}>
                     <Fab
-                    aria-label="save"
-                    color="primary"
-                    className={buttonClassname}
-                    onClick={handleChange}
+                        aria-label="save"
+                        color="primary"
+                        className={buttonClassname}
+                        onClick={handleChange}
                     >
-                    {checkedState ? <CheckIcon /> : <SaveIcon />}
+                        {checkedState ? <CheckIcon /> : <SaveIcon />}
                     </Fab>
                     {loading && <CircularProgress size={68} className={classes.fabProgress} />}
                 </div>
