@@ -7,15 +7,10 @@
     padding: 0px 15px 15px 15px;
     margin: 0px 0px 0px 0px;
     min-width: 30em;
-    height: 30vh;
+    height: 27vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     border: 1px solid rgba(128, 128, 128, 0.3);
-    p, li, div {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 }
 
 .finished {

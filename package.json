@@ -13,17 +13,21 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "enzyme-to-json": "^3.6.1",
+    "file-saver": "^2.0.5",
     "node-sass": "^4.14.1",
     "react": "^17.0.1",
     "react-animated-slider": "^2.0.0",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.2.4",
+    "react-idle-timer": "^4.6.4",
     "react-jdenticon": "0.0.8",
     "react-markdown": "^4.3.1",
+    "react-modal": "^3.14.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-scroll": "^1.8.1",
-    "react-simple-image-slider": "^1.0.4"
+    "react-simple-image-slider": "^1.0.4",
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -57,3 +57,17 @@ export const setStatusForTask = async (taskID, userID, status) => {
 export const getSchuelerList = async () => {
     return await fetch(`${BASE_URL}/users/getSchueler`).then(res => res.json());
 }
+
+export const getAllStatusForUser = async () => {
+    return await fetch(`${BASE_URL}/status/all?${localStorage.getItem('userID')}`).then(res => res.json());
+}
+
+export const getLogoutTimer = async () => {
+    return await fetch(`${BASE_URL}/config/lotimer`).then(res => res.json());
+}
+
+export const getList = async () => {
+    const bereichStatusProUser = await fetch(`${BASE_URL}/status/getProzent`).then(res => res.json());
+    const aufgabenStatus = await fetch(`${BASE_URL}/status/getList`).then(res => res.json());
+    return {bereichStatusProUser, aufgabenStatus};
+}
